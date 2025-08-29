@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>dacuj</title>
+<style>
+    /* —— Retro TV / VHS —— */
+.tv{ max-width:820px; }
+.tv-head,.tv-foot{
+  font: 11px/1.4 "Courier New", monospace;
+  color:#111827; background:linear-gradient(#e5e7eb,#cbd5e1);
+  border:1px solid #6b7280; padding:6px 8px; box-shadow:0 1px 0 rgba(0,0,0,.1) inset;
+}
+.tv-head b{ color:#b91c1c; }
+.tube{
+  position:relative; margin:0; padding:12px; background:#111827;
+  border:1px solid #0f172a; box-shadow:inset 0 0 0 2px #111827, 0 2px 0 rgba(0,0,0,.25);
+}
+.tube-inner{ position:relative; border:1px solid #475569; box-shadow:inset 0 0 40px rgba(0,0,0,.6); }
+.tube-curve{
+  position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(255,255,255,.10), transparent 60%),
+    radial-gradient(120% 80% at 50% 110%, rgba(0,0,0,.20), transparent 60%);
+}
+.tube-wrap{ position:relative; padding-top:56.25%; overflow:hidden; background:#000; }
+.tube-wrap iframe{
+  position:absolute; inset:0; width:100%; height:100%; border:0; display:block;
+}
+.tube-scan{
+  position:absolute; inset:0; pointer-events:none; opacity:.08;
+  background:repeating-linear-gradient(0deg, #000 0, #000 1px, transparent 1px, transparent 3px);
+}
+.tube-glare{
+  position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen; opacity:.08;
+  background:linear-gradient(135deg, rgba(255,255,255,.25), rgba(255,255,255,0) 40%);
+}
+.tv-foot .v{ display:inline-block; width:8px; height:8px; background:#111827; margin:0 1px; border:1px solid #6b7280; }
+  /* —— Reset-ish —— */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; font: 14px/1.5 Verdana, Geneva, Tahoma, sans-serif; color:#0f172a; background:#faf8f5;
+  }
+  a { color:#1e3a8a; text-decoration: underline; }
+
+  /* —— Page chrome —— */
+  .container{ max-width:1120px; margin:0 auto; padding:16px; position:relative; }
+  .scanlines{ pointer-events:none; position:fixed; inset:0; opacity:.06; background:repeating-linear-gradient(0deg,rgba(0,0,0,1) 0, rgba(0,0,0,1) 1px, transparent 1px, transparent 3px);}
+  .header{
+    position:relative; margin: 8px 0 24px; height: 86px;
+  }
+  .big-title{
+    font-weight:900; letter-spacing:.25em; color:#e5e7eb; font-size: clamp(36px, 10vw, 88px);
+    line-height:1; user-select:none;
+  }
+  .badge{
+    position:absolute; left:8px; top:8px; background:#0f172a; color:#f1f5f9; border:1px solid #0b1220; padding:4px 8px; font-size:11px; box-shadow:0 1px 0 rgba(255,255,255,.15);
+  }
+
+  /* —— Layout —— */
+  .grid{ display:grid; grid-template-columns: 220px 1fr; gap:24px; }
+  @media (max-width: 860px){ .grid{ grid-template-columns: 1fr; } }
+
+  /* —— Left nav —— */
+  .nav{ position: sticky; top: 16px; }
+  .btn{
+    display:block; margin:6px 0; font-weight:700; letter-spacing:.02em; text-decoration:none; color:#f8fafc;
+    background:#334155; border:1px solid #0f172a;
+    box-shadow: inset 0 1px 0 #cbd5e1, 0 2px 0 #0f172a; padding:8px 10px;
+  }
+  .btn:hover{ background:#1f2937; }
+  .meta{ margin-top:10px; font-size:11px; color:#475569; }
+
+
+  /* —— Social retro buttons —— */
+.social-links {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.social-btn {
+  display: inline-block;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #f8fafc;
+  background: #334155; /* base grigio blu */
+  border: 1px solid #0f172a;
+  box-shadow: inset 0 1px 0 #cbd5e1, 0 2px 0 #0f172a;
+  transition: background 0.15s;
+}
+
+.social-btn:hover {
+  background: #1f2937;
+}
+
+.social-btn.instagram { background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af, #515bd4); }
+.social-btn.tiktok    { background: linear-gradient(135deg, #25f4ee, #000000 50%, #fe2c55); }
+.social-btn.site      { background: linear-gradient(135deg, #0ea5e9, #0369a1); }
+
+.social-btn.instagram:hover,
+.social-btn.tiktok:hover,
+.social-btn.site:hover {
+  filter: brightness(1.1);
+}
+  /* —— Sections —— */
+  section{ margin:0 0 48px; }
+  h2{ font-size:28px; margin:0 0 8px; color:#7f1d1d; text-shadow: 0 1px 0 rgba(255,255,255,.6); }
+  .rule{ height:1px; background:#cbd5e1; margin:14px 0 20px; }
+  .lead{ max-width:720px; }
+
+  /* —— "Books" style grid —— */
+  .books{ display:grid; grid-template-columns: repeat(3, 220px); gap:32px; justify-content:flex-start; }
+  @media (max-width: 980px){ .books{ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); } }
+  .book{ text-align:center; text-decoration:none; }
+  .book-cover{ width: 180px; height: 220px; margin: 0 auto; border:1px solid #475569; box-shadow:0 2px 0 rgba(0,0,0,.2); background: linear-gradient(135deg,#b91c1c,#ef4444 70%); display:grid; place-items:center; color:#fde68a; font-weight:900; font-size:32px; letter-spacing:.06em; text-shadow:0 2px 0 rgba(0,0,0,.5); }
+  .book-title{ margin:8px 0 2px; font-weight:900; color:#1e3a8a; text-decoration:underline; }
+  .book-sub{ font-size:12px; color:#475569; }
+
+  /* —— Seeson cards —— */
+  .cards{ display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; }
+  @media (max-width: 980px){ .cards{ grid-template-columns: 1fr; } }
+  .card{ border:1px solid #94a3b8; background:#fff; box-shadow:0 1px 0 rgba(0,0,0,.05); padding:10px; }
+  .thumb{ height:130px; border:1px solid #64748b; background: linear-gradient(135deg,#e2e8f0,#f8fafc); display:grid; place-items:center; color:#64748b; font-weight:700; }
+  .small{ font-size:12px; color:#334155; }
+
+  /* —— Photo grid —— */
+  
+  /* Grid per AI Showcase: 2 colonne desktop, 1 su mobile */
+.polaroids{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap: 16px;
+  max-width: 900px;     /* opzionale: limita l'ampiezza totale */
+  margin: 0 auto;       /* centra la griglia */
+}
+
+@media (max-width: 720px){
+  .polaroids{
+    grid-template-columns: 1fr; /* su mobile impila */
+  }
+}
+
+  .tube-wrap video {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border:0;
+  display:block;
+}
+
+.seeson-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.polaroid {
+  aspect-ratio: 4 / 3; /* nuovo formato 4:3 */
+  background:#e5e7eb;
+  border:1px solid #475569;
+  box-shadow:0 2px 0 rgba(0,0,0,.2);
+  display:grid;
+  place-items:center;
+  font-size:12px;
+  overflow:hidden; /* così foto/video riempiono il riquadro */
+}
+
+.seeson-photo {
+  border: 1px solid #94a3b8;
+  background: #fff;
+  box-shadow: 0 1px 0 rgba(0,0,0,.05);
+  padding: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.seeson-photo img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5; /* mantiene il verticale 1080x1350 */
+  object-fit: cover;
+  display: block;
+}
+  /* —— Code box —— */
+  pre{ background:#fff; border:1px solid #94a3b8; box-shadow:0 1px 0 rgba(0,0,0,.05); padding:12px; overflow-x:auto; font-size:12px; }
+
+  /* —— Footer —— */
+  footer{ font-size:11px; color:#475569; border-top:1px solid #cbd5e1; padding-top:10px; margin-top:24px; }
+</style>
+</head>
+<body>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="container">
+    <header class="header">
+      <div class="big-title">DAVIDE CUCCIARDI</div>
+      <div class="badge">Portfolio</div>
+    </header>
+
+    <div class="grid">
+      <!-- Left nav -->
+      <aside>
+        <nav class="nav">
+            <a class="btn" href="#home">Home</a>
+            <a class="btn" href="#works">In breve</a>
+            <a class="btn" href="#seeson">Seeson</a>
+            <a class="btn" href="#photos">AI Showcase</a>
+            <a class="btn" href="#video">Runigo</a>
+            <a class="btn" href="#contact">Contact</a>
+          <div class="meta">
+            <div>Updated: <strong>Aug 2025</strong></div>
+            <div>From: Napoli, IT</div>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main -->
+      <main id="home">
+        <section>
+          <h2 style="margin-top: 60px;">-------</h2>
+          <div class="rule"></div>
+          <!-- <p class="lead">Ciao! Sono Davide, creativo di Napoli. Costruisco <strong>gioielli Seeson</strong> (925 silver, punk/glam – “Wild Kids”), scatto <em>analog</em> (Nan Goldin / Larry Clark mood) e studio ingegneria + un po’ di psicologia applicata all’<abbr title="Human‑Robot Collaboration">HRC</abbr>. Questo portfolio volutamente low‑fi omaggia il web dei primi 2000.</p> -->
+        </section>
+
+        
+        <section id="works">
+            <h2>In breve su di me</h2>
+            <div class="rule"></div>
+            <div class="books">
+              <div class="book">
+                <div class="book-cover">LS</div>
+                <div class="book-title">Liceo Scientifico</div>
+                <div class="book-sub">Diplomato con una forte volontà di studiare all’estero.</div>
+              </div>
+              <div class="book">
+                <div class="book-cover" style="background:linear-gradient(135deg,#0f766e,#14b8a6 70%);">UK</div>
+                <div class="book-title">Exchange in UK</div>
+                <div class="book-sub">Quarto anno a Birmingham, Inghilterra, come exchange semester.</div>
+              </div>
+              <div class="book">
+                <div class="book-cover" style="background:linear-gradient(135deg,#4c1d95,#7c3aed 70%);">UNI</div>
+                <div class="book-title">Ingegneria a Napoli</div>
+                <div class="book-sub">Studio Ingegneria Informatica alla Federico II, con il sogno di proseguire all’estero.</div>
+              </div>
+            </div>
+          </section>
+          
+
+        <section id="seeson">
+            <h2>Seeson (Jewelry)</h2>
+            <div class="rule"></div>
+            <!-- Showcase Immagini Seeson -->
+<div class="seeson-images" style="margin-top:30px;">
+    <h3 style="margin-bottom:10px;">Gallery</h3>
+    <div class="seeson-gallery">
+      <div class="seeson-photo">
+        <img src="https://cdn.shopify.com/s/files/1/0832/4215/6373/files/Artboard_2.jpg?v=1756474336" alt="Seeson Jewelry 1">
+      </div>
+      <div class="seeson-photo">
+        <img src="https://cdn.shopify.com/s/files/1/0832/4215/6373/files/Artboard_3.jpg?v=1756474345" alt="Seeson Jewelry 2">
+      </div>
+      <div class="seeson-photo">
+        <img src="https://cdn.shopify.com/s/files/1/0832/4215/6373/files/Artboard_4.jpg?v=1756474350" alt="Seeson Jewelry 3">
+      </div>
+    </div>
+  </div>
+   <!--
+
+            <div class="cards">
+
+              <div class="card">
+                
+                <h3>Wild Chain v2</h3>
+                <p class="small">925 silver, finitura raw, studio + Polaroid shots.</p>
+              </div>
+              <div class="card">
+                
+                <h3>Bolo Tie – Napoli</h3>
+                <p class="small">Cowboy meets Vesuvio. Packaging mockups + Shopify.</p>
+              </div>
+              <div class="card">
+                <h3>Livin’ to the Ugliest</h3>
+                <p class="small">Lookbook analog: neon flash, 35mm grain, vibe punk.</p>
+              </div>
+            </div> -->
+          
+            <!-- nuovo paragrafo + social -->
+            <p class="lead" style="margin-top:20px;">
+                Seeson è il mio progetto più recente, nato inizialmente insieme a un amico con l’idea di lanciare t-shirt ironiche prodotte a Napoli. Dopo aver ottenuto una discreta attenzione mediatica, decisi di interrompere quella prima fase perché non mi convinceva pienamente. Successivamente ho provato a rilanciarlo con una linea di gioielli, un’iniziativa che però non si è concretizzata del tutto. Attualmente il progetto è in pausa, in attesa di essere ripreso una volta conclusi gli impegni universitari.<em>Wild Kids</em>.
+            </p>
+            <!-- Video Seeson -->
+<div style="margin-top:30px;">
+  
+    <div class="tv">
+      <div class="tv-head"><b>REC ●</b> 00:00  |  INPUT: MP4 480p  |  TRACKING: AUTO</div>
+  
+      <div class="tube">
+        <div class="tube-inner">
+          <div class="tube-wrap">
+            <!-- sostituisci il link con quello al tuo file video su Shopify -->
+            <video controls autoplay muted loop>
+              <source src="https://cdn.shopify.com/videos/c/o/v/9dc570283a8b40999686a7f8470ba3a5.mp4" type="video/mp4">
+              Il tuo browser non supporta il tag video.
+            </video>
+            <div class="tube-scan"></div>
+            <div class="tube-glare"></div>
+          </div>
+          <div class="tube-curve"></div>
+        </div>
+      </div>
+  
+      <div class="tv-foot">
+        ⏮︎ ⏯︎ ⏭︎  VOL:
+        <span class="v"></span><span class="v"></span><span class="v"></span><span class="v"></span>
+        <span class="v"></span><span class="v" style="background:#9ca3af;"></span>
+        <span class="v" style="background:#9ca3af;"></span><span class="v" style="background:#9ca3af;"></span>
+        |  HQ ON  |  STEREO
+      </div>
+    </div>
+  
+    <pre>// Info tecniche:
+        Sito creato su Shopify e personalizzato con il mio codice. 
+        Mi sono occupato della direzione creativa del brand
+        Ho realizzato le grafiche con la suite Adobe.
+        
+    </pre>
+  </div>
+  <div class="social-links">
+    <a href="https://www.tiktok.com/@seeson.xyz" target="_blank" class="social-btn tiktok">TikTok</a>
+    <a href="https://www.instagram.com/seeson.xyz" target="_blank" class="social-btn instagram">Instagram</a>
+    <a href="https://www.seeson.xyz" target="_blank" class="social-btn site">Sito</a>
+  </div>
+          </section>   
+
+          <section id="photos">
+            <h2>AI Showcase</h2>
+            <div class="rule"></div>
+            <p class="lead" style="margin-bottom:20px;">
+                L’AI è ormai impossibile da ignorare: sto seguendo da vicino la sua evoluzione 
+                per capire come usarla al meglio nella crescita di un brand e integrarla in modo sano.
+              </p>
+            <div class="polaroids">
+             
+          
+              <!-- Video AI 1 -->
+              <div class="polaroid">
+                <video controls muted loop style="width:100%; height:100%; object-fit:cover;">
+                  <source src="https://cdn.shopify.com/videos/c/o/v/5e8a069ee04d40a0ba268ad2d845ef24.mov" type="video/mp4">
+                  Il tuo browser non supporta il tag video.
+                </video>
+              </div>
+          
+              <!-- Video AI 2 -->
+              <div class="polaroid">
+                <video controls muted loop style="width:100%; height:100%; object-fit:cover;">
+                  <source src="https://cdn.shopify.com/videos/c/o/v/59ff4061410f49c2ba0586e1db2a4d13.mov" type="video/mp4">
+                  Il tuo browser non supporta il tag video.
+                </video>
+              </div>
+            </div>
+          </section>
+
+        <section id="video">
+            <h2>Runigo</h2>
+            <div class="rule"></div>
+            <p class="lead" style="margin-bottom:20px;">
+                Durante il quinto anno di liceo ideai una web-app per connettere studenti liceali con universitari all’estero, così da rendere più accessibili i percorsi di application. Nonostante call con Paolo De Nadai (ScuolaZoo, WeRoad) e Alessandro Benetton (21Invest), non ottenni i fondi necessari e il progetto rimase sospeso.
+              </p>
+          
+            <div class="tv">
+              <div class="tv-head"><b>REC ●</b> 00:00  |  INPUT: YT 480p  |  TRACKING: AUTO</div>
+          
+              <div class="tube">
+                <div class="tube-inner">
+                  <div class="tube-wrap">
+                    <!-- Sostituisci VIDEO_ID con il tuo -->
+                    <iframe
+                      src="https://www.youtube.com/embed/zKD89j6S2_w"
+                      title="YouTube video"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowfullscreen>
+                    </iframe>
+                    <div class="tube-scan"></div>
+                    <div class="tube-glare"></div>
+                  </div>
+                  <div class="tube-curve"></div>
+                </div>
+              </div>
+          
+              <div class="tv-foot">
+                ⏮︎ ⏯︎ ⏭︎  VOL:
+                <span class="v"></span><span class="v"></span><span class="v"></span><span class="v"></span>
+                <span class="v"></span><span class="v" style="background:#9ca3af;"></span>
+                <span class="v" style="background:#9ca3af;"></span><span class="v" style="background:#9ca3af;"></span>
+                |  HQ OFF  |  STEREO
+              </div>
+            </div>
+          
+
+            <pre>// Info tecniche:
+                Backend: Django (framework in python)
+                Frontend: ReactJs, molte delle grafiche importate da Figma e lavorate insieme a designer su Fiverr
+            </pre>
+          </section>
+
+    
+
+        <section id="contact">
+          <h2>Contact</h2>
+          <div class="rule"></div>
+          <a>https://www.instagram.com/davidecucciardi/</a>
+        </section>
+
+        <footer>
+          © <span id="y">2025</span> Davide // This page intentionally looks slightly ugly.
+        </footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
