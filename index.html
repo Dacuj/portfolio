@@ -190,6 +190,66 @@
   object-fit: cover;
   display: block;
 }
+    /* —— Mobile polish —— */
+html { scroll-behavior: smooth; }
+
+/* breakpoint principale */
+@media (max-width: 720px){
+  body { font-size: 15px; }
+  .container { padding: 12px; }
+
+  /* Header più compatto */
+  .header{ height: auto; margin: 8px 0 16px; }
+  .big-title{ letter-spacing: .12em; font-size: clamp(28px, 12vw, 48px); }
+
+  /* Layout: una colonna */
+  .grid{ grid-template-columns: 1fr; }
+
+  /* Nav: diventa barra orizzontale scrollabile in alto */
+  aside{ order: -1; }
+  .nav{
+    position: sticky; top: 0; z-index: 10;
+    display: flex; gap: 8px; align-items: center;
+    overflow-x: auto; padding: 8px 2px;
+    background: #faf8f5; border-bottom: 1px solid #e5e7eb;
+  }
+  .btn{
+    display: inline-block; flex: 0 0 auto;
+    margin: 0; padding: 10px 12px; font-size: 13px;
+    white-space: nowrap;
+  }
+  .meta{ display: none; } /* nasconde i metadati per non affollare */
+
+  /* Sezione "In breve": card più piccole */
+  .books{
+    grid-template-columns: repeat(3, minmax(120px, 1fr));
+    gap: 12px;
+  }
+  .book-cover{ width: 100%; height: 150px; }
+
+  /* Seeson */
+  .cards{ grid-template-columns: 1fr; }
+  .seeson-gallery{ grid-template-columns: repeat(2, 1fr); }
+
+  /* Video/TV wrapper full width */
+  .tv{ max-width: 100%; }
+  .tube-wrap{ padding-top: 56.25%; } /* 16:9 responsive */
+
+  /* AI Showcase: 1 colonna su mobile */
+  .polaroids{ grid-template-columns: 1fr; max-width: 100%; gap: 12px; }
+
+  /* Bottoni social: più stretti */
+  .social-links{ gap: 8px; }
+}
+
+/* breakpoint intermedio (tablet) */
+@media (min-width: 721px) and (max-width: 980px){
+  .books{ grid-template-columns: repeat(3, minmax(160px, 1fr)); }
+  .book-cover{ height: 180px; }
+  .cards{ grid-template-columns: repeat(2, 1fr); }
+  .seeson-gallery{ grid-template-columns: repeat(3, 1fr); }
+  .polaroids{ grid-template-columns: repeat(2, minmax(260px, 1fr)); }
+}
   /* —— Code box —— */
   pre{ background:#fff; border:1px solid #94a3b8; box-shadow:0 1px 0 rgba(0,0,0,.05); padding:12px; overflow-x:auto; font-size:12px; }
 
